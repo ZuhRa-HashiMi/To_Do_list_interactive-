@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 /* eslint-disable no-unused-vars */
 import './style.css';
 
@@ -9,7 +10,7 @@ const clearSelectedToDoItems = document.querySelector('.clear');
 class TodoTask {
   constructor(desp, arr, done = false) {
     this.desp = desp;
-    this.index = arr.length;
+    this.index = arr.length + 1;
     this.done = done;
   }
 }
@@ -22,14 +23,18 @@ class TaskLisk {
     const itemsArray = localStorage.getItem('tasks')
       ? JSON.parse(localStorage.getItem('tasks'))
       : [];
-
-    console.log('Get data from Local Storage: ', itemsArray);
     const itemsToBeDeleted = itemsArray.filter((item) => item.done === false);
-    console.log('Items to be deleted: ', itemsToBeDeleted);
-    this.task = itemsToBeDeleted;
-    console.log('Save items to be deleted: ', this.task);
-    this.saveTolocal();
+    this.setIndex();
+    localStorage.setItem('tasks', JSON.stringify(itemsToBeDeleted));
+    location.reload();
   }
+
+  setIndex() {
+    const { length } = this.tasks;
+    for (let i = 0; i < length; i += 1) {
+      this.tasks[i].index = i + 1;
+    }
+  } // for updating the index
 
   saveTolocal() {
     localStorage.setItem('tasks', JSON.stringify(this.tasks));
